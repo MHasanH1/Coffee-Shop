@@ -104,7 +104,17 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL="shop.User"
-
+# AUTHENTICATION_BACKENDS='django.contrib.auth.backends.ModelBackend'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+# PASSWORD_HASHERS=['django.contrib.auth.hashers.PBKDF2PasswordHasher']
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.Argon2PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

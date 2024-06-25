@@ -11,19 +11,34 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
 from rest_framework import generics, permissions
 from .serializers import UserSerializer
+from rest_framework import status
+from .models import User
+from django.contrib.auth.hashers import make_password
+from rest_framework.permissions import AllowAny
 
-class UserRegistrationView(generics.CreateAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny]
+class SignUpView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoginView(APIView):
-    authentication_classes = [TokenAuthentication]
-
+    # authentication_classes = [TokenAuthentication]
+    permission_classes=[AllowAny]
     def post(self, request:Request):
         # Your authentication logic here
-        user = authenticate(username=request.data['username'], password=request.data['password'])
+        username=request.data.get('username')
+        password=request.data.get('password')
+        userr=User.objects.get(username=username)
+        print(User.objects.filter(username=username).exists())
+        user = authenticate(username=username, password=make_password(password))
+        print(user)
         if user:
             token, created = Token.objects.get_or_create(user=user)
             return Response({'token': token.key})
         else:
+            print(username,password)
             return Response({'error': 'Invalid credentials'}, status=401)

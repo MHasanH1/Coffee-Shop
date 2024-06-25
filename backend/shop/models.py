@@ -3,9 +3,8 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class User(AbstractUser):
-    fullname=models.CharField(max_length=100)
     phonenumber=models.CharField(max_length=11)
-    is_admin=models.BooleanField()
+    is_admin=models.BooleanField(default=False)
 
 
 class Order(models.Model):
