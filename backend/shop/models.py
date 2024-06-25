@@ -24,7 +24,7 @@ class Product(models.Model):
     sugar=models.IntegerField()
     coffee=models.IntegerField()
     flour=models.IntegerField()
-    vertical=models.CharField(max_length=100,choices=Vertical.choices)
+    vertical=models.CharField(max_length=100,choices=Vertical.choices,blank=False,null=False)
     price=models.IntegerField()
 
 class OrderProduct(models.Model):

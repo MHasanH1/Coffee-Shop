@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User,Product
 
 class UserCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -22,4 +22,21 @@ class UserCreationSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+class ProductSerializer(serializers.ModelSerializer):
+    # vertical = serializers.CharField(source='vertical.label')
+    class Meta:
+        model=Product
+        fields=('name','sugar','coffee','flour','vertical','price')
+    
+    def create(self,validated_data):
+        product=Product(
+            name=validated_data['name'],
+            sugar=validated_data['sugar'],
+            coffee=validated_data['coffee'],
+            flour=validated_data['flour'],
+            vertical=validated_data['vertical'],
+            price=validated_data['price']
+        )
+        product.save()
+        return product
         
