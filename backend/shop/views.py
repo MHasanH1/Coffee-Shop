@@ -34,11 +34,9 @@ class LoginView(APIView):
 
 class ShowProductsByVerticals(APIView):
     def get(self,request:Request):
-        verticals = Vertical.choices
-        products_by_vertical = {}
-        for vertical,label in verticals:
-            products = Product.objects.filter(vertical=vertical)
-            products_by_vertical[label] = ProductSerializer(products,many=True).data
+        i=request.data.get('ver')
+        products=Product.objects.filter(vertical=i)
+        products_by_vertical = ProductSerializer(products,many=True).data
         return Response(products_by_vertical)
     
 
