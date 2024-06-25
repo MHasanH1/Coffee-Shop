@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Product
+from .models import User,Product,OrderProduct,UserOrder,Order
 
 class UserCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -39,4 +39,27 @@ class ProductSerializer(serializers.ModelSerializer):
         )
         product.save()
         return product
-        
+    
+
+class OrderProductSerializer(serializers.ModelSerializer):
+    is_ordered_now=serializers.SerializerMethodField()
+    class Meta:
+        model = OrderProduct
+        fields=('id','product','order','is_ordered_now')
+
+    def get_is_ordered_now(self,obj:OrderProduct):
+        user=self.context['request'].user
+        return UserOrder.objects.filter(user=user,order=obj.order).last().is_active
+    
+
+    
+
+class OrderSerializer(serializers.ModelSerializer):
+    products=serializers.SerializerMethodField()
+    class Meta:
+        model = Order
+        fields=('id','products','purchase_amount','type')
+    
+    def get_products(self,obj:Order):
+        products=Product.objects.filter(order_products__order=obj)
+        return ProductSerializer(products,many=True).data

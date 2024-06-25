@@ -6,8 +6,8 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
 from rest_framework import generics, permissions
 from rest_framework import status
-from .serializers import UserCreationSerializer,ProductSerializer
-from .models import Vertical,Product
+from .serializers import UserCreationSerializer,ProductSerializer,OrderProductSerializer,OrderSerializer
+from .models import Vertical,Product,UserOrder,Order,OrderProduct
 
 
 class RegisterView(APIView):
@@ -47,3 +47,33 @@ class ProductView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class AddToCartView(APIView):
+    permission_classes=[permissions.IsAuthenticated]
+    def post(self,request:Request,product_id:int):
+        is_active_user_order=UserOrder.objects.filter(is_active=True).exists()
+        if is_active_user_order:
+            user_order=UserOrder.objects.filter(is_active=True).last()
+        else:
+            order=Order.objects.create()
+            user_order=UserOrder.objects.create(user=request.user,order=order)
+        order=user_order.order
+        print(product_id)
+        product=Product.objects.get(id=product_id)
+        order_product,created=OrderProduct.objects.get_or_create(order=order,product=product)
+        serialized=OrderProductSerializer(order_product,context={"request":request})
+        if created:
+            return Response(serialized.data,status=status.HTTP_201_CREATED)
+        else:
+            return Response({"message":"already exists in cart"},status=status.HTTP_302_FOUND)
+        
+
+    def get(self,request:Request):
+        orders=Order.objects.filter(user_orders__user=request.user)
+        serialized=OrderSerializer(orders,many=True)
+        return Response(data=serialized.data,status=status.HTTP_200_OK)
+
+        
+
+

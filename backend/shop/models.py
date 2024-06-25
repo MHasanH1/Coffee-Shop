@@ -8,8 +8,8 @@ class User(AbstractUser):
 
 
 class Order(models.Model):
-    purchase_amount=models.IntegerField()
-    type=models.BooleanField()
+    purchase_amount=models.IntegerField(null=True,blank=True)
+    type=models.BooleanField(null=True,blank=True)
 
 
 
@@ -34,6 +34,7 @@ class OrderProduct(models.Model):
 class UserOrder(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_orders")
     order=models.ForeignKey(Order,on_delete=models.CASCADE,related_name="user_orders")
+    is_active=models.BooleanField(default=True)
 
 
 class Storage(models.Model):
