@@ -1,50 +1,51 @@
 <template>
   <div class="d-flex justify-content-center align-items-center">
   <main class="form-signin w-25 mx-auto">
-    <form>
+    <form @submit.prevent="signUp">
       <img class="mb-4" src="../assets/img/Signup.jpg" alt="" width="182" height="157">
       <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
 
       <div class="user-box">
-        <input type="text" autocomplete required/>
+        <input type="text" autocomplete required v-model="user.first_name"/>
         <label>Fist Name</label>
         <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
       </div>
 
       <div class="user-box">
-        <input type="text" autocomplete required/>
+        <input type="text" autocomplete required v-model="user.last_name"/>
         <label>Last Name</label>
         <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
       </div>
 
       <div class="user-box">
-        <input type="text" autocomplete required/>
+        <input type="text" autocomplete required v-model="user.username"/>
         <label>username</label>
         <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
       </div>
 
       <div class="user-box">
-        <input type="text" autocomplete required />
+        <input type="text" autocomplete required v-model="user.email"/>
         <label>email</label>
         <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
       </div>
 
       <div class="user-box">
-        <input type="password" autocomplete required />
+        <input type="password"  autocomplete required v-model="user.password"/>
         <label>Password</label>
         <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
       </div>
 
       <div class="user-box">
-        <input class="mb-1" type="password" autocomplete required />
+        <input class="mb-1" type="password" autocomplete required v-model="confirmedPass" @input="checkPassword()"/>
         <label>Repeat Password</label>
         <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
+        <span class="password-toggle-icon" v-if="isConfirmed">&#9989;</span>
       </div>
 
       <hr class="my-3" />
 
       <div class="user-box">
-        <input class="mb-1" type="number" autocomplete required />
+        <input class="mb-1" type="number" autocomplete required v-model="user.phonenumber"/>
         <label>Phone Number</label>
       </div>
 
@@ -72,16 +73,41 @@
 </template>
 
 <script>
-// eslint-disable-next-line no-unused-vars
-import {useRouter} from 'vue-router'
+
+import axios from 'axios';
+// import baseURL from "../env";
 export default {
   data() {
     return {
+      user:{
+        username:"",
+        password:"",
+        first_name:'',
+        last_name:'',
+        email:'',
+        phonenumber:''
 
+      },
+      confirmedPass:'',
+      isConfirmed: false
+    
     }
   },
   methods: {
-
+    signUp(){
+      axios.post(`http://localhost:8000/api/signup/`,this.user)
+      .then(res=>{
+        console.log(res);
+        localStorage.setItem('token',res.data.token);
+        this.$router.push('/')
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+    },
+    checkPassword(){
+      this.isConfirmed = this.confirmedPass == this.user.password
+    }
   },
   mounted() {
     // const passwordField = document.getElementById("password");
