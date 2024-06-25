@@ -1,29 +1,33 @@
-from django.shortcuts import render
-
-# Create your views here.
-
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.request import Request
-
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
 from rest_framework import generics, permissions
-from .serializers import UserSerializer
+from .serializers import UserCreationSerializer
+from rest_framework import status
+from .models import User
 
-class UserRegistrationView(generics.CreateAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny]
+
+class RegisterView(APIView):
+    def post(self, request :Request, *args, **kwargs):
+        serializer = UserCreationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
 
 class LoginView(APIView):
-    authentication_classes = [TokenAuthentication]
-
-    def post(self, request:Request):
-        # Your authentication logic here
-        user = authenticate(username=request.data['username'], password=request.data['password'])
-        if user:
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
             token, created = Token.objects.get_or_create(user=user)
+            print(created)
             return Response({'token': token.key})
-        else:
-            return Response({'error': 'Invalid credentials'}, status=401)
+        return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
