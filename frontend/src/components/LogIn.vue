@@ -2,18 +2,18 @@
 <template>
   <div class="d-flex justify-content-center align-items-center">
     <main class="form-signin w-25 mx-auto">
-      <form>
+      <form @submit.prevent="logIn">
         <img class="mb-4" src="../assets/img/Login.jpg" alt="" width="182" height="177">
         <h1 class="h3 mb-3 fw-normal">Login</h1>
 
         <div class="user-box">
-          <input type="text" autocomplete required />
+          <input type="text" autocomplete required v-model="body.username"/>
           <label>username</label>
           <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
         </div>
 
         <div class="user-box">
-          <input type="password" autocomplete required />
+          <input type="password" autocomplete required v-model="body.password"/>
           <label>Password</label>
           <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
         </div>
@@ -43,6 +43,33 @@
 
 <script>
 
+import axios from "axios";
+export default {
+  data() {
+    return {
+      body:{
+        username:'',
+        password:''
+      }
+    }
+  },
+  methods: {
+    logIn(){
+
+      axios.post(`http://localhost:8000/api/login/`,this.body)
+      .then(res=>{
+        localStorage.setItem('token',res.data.token);
+        this.$router.push('/');
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+    }
+  },
+  mounted() {
+
+  }
+}
 </script>
 
 <style scoped>
