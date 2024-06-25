@@ -14,9 +14,9 @@ class Order(models.Model):
 
 
 class Vertical(models.TextChoices):
-     HOT_DRINK="hot drink"
-     COLD_DRINK="cold drink"
-     CAKE="cake"
+    HOT_DRINK="hot drink"
+    COLD_DRINK="cold drink"
+    CAKE="cake"
 
 
 class Product(models.Model):
