@@ -6,12 +6,18 @@
           <div class="card shadow-sm">
             <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
             <div class="card-body">
-              <h4>{{card?.title}}</h4>
-              <p class="card-text">{{card?.content}}</p>
+              <h4>{{card?.name}}</h4>
+              <p class="card-text">coffee {{card?.coffee}}</p>
+              <p class="card-text">flour {{card?.flour}}</p>
+              <p class="card-text">price {{card?.price}}</p>
+              <p class="card-text">sugar {{card?.sugar}}</p>
+              <p class="card-text">vertical {{card?.vertical}}</p>
+
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isAdmin">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary" @click="addToCart(card.id)">add to cart</button>
                 </div>
                 <small class="text-body-secondary">9 mins</small>
               </div>
@@ -28,30 +34,30 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
       cards: [
-        { title: 'Card 1', content: 'This is the content of card 1.' },
-        { title: 'Card 2', content: 'This is the content of card 2.' },
-        { title: 'Card 3', content: 'This is the content of card 3.' },
-        { title: 'Card 4', content: 'This is the content of card 4.' },
-        { title: 'Card 5', content: 'This is the content of card 5.' },
-        { title: 'Card 6', content: 'This is the content of card 6.' },
-        { title: 'Card 7', content: 'This is the content of card 7.' },
-        { title: 'Card 8', content: 'This is the content of card 8.' },
-        { title: 'Card 9', content: 'This is the content of card 9.' },
-        { title: 'Card 10', content: 'This is the content of card 10.' },
-        { title: 'Card 11', content: 'This is the content of card 11.' },
-        { title: 'Card 12', content: 'This is the content of card 12.' },
+        {
+          name:'',
+          sugar:0,
+          coffee: 0,
+          flour: 0 ,
+          vertical : '',
+
+        }
       ],
       showAll: false,
+      isAdmin: false,
     }
   },
   computed: {
     visibleCards() {
       return this.showAll ? this.cards : this.cards.slice(0, 3);
-    }
+    },
+
   },
   methods: {
     showAllCards() {
@@ -59,7 +65,42 @@ export default {
     },
     showLessCards() {
       this.showAll = false;
+    },
+    addToCart(id){
+      axios.post(`http://localhost:8000/api/add-to-cart/${id}/`,{}, {
+        headers:{
+          'Authorization': `Token ${localStorage.getItem('token')}`
+        }
+      })
+      .then(res=>{
+        // console.log("in then");
+        console.log(res);
+        alert('add successfully')
+      })
+      .catch(err=>{
+        if (err.response.status===302){
+          alert('already exists in cart')
+        }
+        console.log(err);
+      })
+    },
+    getPopulars(){
+      axios.get('http://localhost:8000/api/get-populars/',{
+        headers:{
+          Authorization : `Token ${localStorage.getItem('token')}`
+        }
+      })
+      .then(res=>{
+        console.log(res);
+        this.cards=res.data;
+      }).catch(err=>{
+
+        console.log(err);
+      })
     }
+  },
+  mounted(){
+    this.getPopulars();
   }
 }
 </script>

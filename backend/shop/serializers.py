@@ -26,7 +26,7 @@ class ProductSerializer(serializers.ModelSerializer):
     # vertical = serializers.CharField(source='vertical.label')
     class Meta:
         model=Product
-        fields=('name','sugar','coffee','flour','vertical','price')
+        fields=('id','name','sugar','coffee','flour','vertical','price')
     
     def create(self,validated_data):
         product=Product(
@@ -63,3 +63,10 @@ class OrderSerializer(serializers.ModelSerializer):
     def get_products(self,obj:Order):
         products=Product.objects.filter(order_products__order=obj)
         return ProductSerializer(products,many=True).data
+    
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields=('id','first_name','last_name','email','phonenumber','username')
