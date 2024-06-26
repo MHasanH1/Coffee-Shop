@@ -99,8 +99,9 @@
           </form>
 
           <div class="text-end">
-            <button @click="this.$router.push('/login')" type="button" class="btn btn-outline-light me-2">Login</button>
-            <button @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>
+            <button v-if="!isAuthenticated" @click="this.$router.push('/login')" type="button" class="btn btn-outline-light me-2">Login</button>
+            <button v-if="!isAuthenticated" @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>
+            <button v-else @click="this.$router.push('/login')" type="button" class="btn btn-outline-light me-2">logout</button>
           </div>
         </div>
       </div>
@@ -110,16 +111,24 @@
 
 
 <script>
-
+import checkAuthentication from "../services";
 export default ({
+  data(){
+    return {
+      isAuthenticated: false,
+
+    }
+  },
   methods: {
 
   },
-  mounted() {
+  async mounted() {
     const dropdown = document.getElementsByClassName("dropdown-menu")[0];
     dropdown.addEventListener('click', (e) => {
       e.stopPropagation();
     });
+    this.isAuthenticated=await checkAuthentication();
+    console.log(this.isAuthenticated);
   }
 })
 </script>

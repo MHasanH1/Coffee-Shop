@@ -26,7 +26,7 @@ class ProductSerializer(serializers.ModelSerializer):
     # vertical = serializers.CharField(source='vertical.label')
     class Meta:
         model=Product
-        fields=('name','sugar','coffee','flour','vertical','price')
+        fields=('id','name','sugar','coffee','flour','vertical','price')
     
     def create(self,validated_data):
         product=Product(
