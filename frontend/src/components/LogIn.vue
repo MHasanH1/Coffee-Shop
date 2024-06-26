@@ -1,4 +1,3 @@
-
 <template>
   <div class="d-flex justify-content-center align-items-center">
     <main class="form-signin w-25 mx-auto">
@@ -38,30 +37,46 @@
         </div>
       </form>
     </main>
+    <transition name="fade">
+      <div v-show="loginErr" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> {{ loginErr }}
+        <button type="button" class="btn-close" @click="this.loginErr = ''" aria-label="Close"></button>
+      </div>
+    </transition>
+
+<!--    <div v-show="!loginErr" class="alert alert-success alert-dismissible fade show" role="alert">-->
+<!--      <strong>Success!</strong> You logged in successful.-->
+<!--    </div>-->
   </div>
 </template>
 
 <script>
 
 import axios from "axios";
+import eventBus from '../EventBus';
+
 export default {
   data() {
     return {
       body:{
         username:'',
-        password:''
-      }
+        password:'',
+      },
+      loginErr: "",
     }
   },
   methods: {
     logIn(){
-
       axios.post(`http://localhost:8000/api/login/`,this.body)
       .then(res=>{
         localStorage.setItem('token',res.data.token);
+        localStorage.setItem('sharedData', JSON.stringify(res));
+        // console.log(res);
+        eventBus.data = res;
         this.$router.push('/');
       })
       .catch(err=>{
+        this.loginErr = err.response.data.error;
         console.log(err);
       })
     }
@@ -75,6 +90,21 @@ export default {
 <style scoped>
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:400,500&display=swap");
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.alert {
+  position: fixed;
+  bottom: 4rem;
+}
 
 .signUp {
   transition: .1s;

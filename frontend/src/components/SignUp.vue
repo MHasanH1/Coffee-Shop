@@ -7,7 +7,7 @@
 
       <div class="user-box">
         <input type="text" autocomplete required v-model="user.first_name"/>
-        <label>Fist Name</label>
+        <label>First Name</label>
         <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
       </div>
 
@@ -69,6 +69,12 @@
       </div>
     </form>
   </main>
+    <transition name="fade">
+      <div v-show="signupErr" ref="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> {{ signupErr }}
+        <button type="button" class="btn-close" @click="this.signupErr = ''" aria-label="Close"></button>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -89,8 +95,9 @@ export default {
 
       },
       confirmedPass:'',
-      isConfirmed: false
-    
+      isConfirmed: false,
+      signupErr: "",
+      alertVisible: false,
     }
   },
   methods: {
@@ -99,10 +106,25 @@ export default {
       .then(res=>{
         console.log(res);
         localStorage.setItem('token',res.data.token);
+        localStorage.setItem('sharedData',JSON.stringify(res));
         this.$router.push('/')
       })
       .catch(err=>{
-        console.log(err);
+        this.signupErr = [];
+        const keys = Object.keys(err.response.data);
+        for (const key of keys) {
+          if (key === 'username')
+            this.signupErr += err.response.data.username + '  '
+          else if (key === 'email')
+            this.signupErr += err.response.data.email + ' '
+        }
+        console.log(this.signupErr)
+        // this.signupErr = err.response.data.email[0] || err.response.data.username[0] || '';
+        console.log(err.response.data);
+        this.$refs.alert.style.opacity = 1;
+        setTimeout(() => {
+          this.$refs.alert.style.opacity = 0;
+        }, 3000);
       })
     },
     checkPassword(){
@@ -124,13 +146,28 @@ export default {
     //     togglePassword.classList.add("fa-eye");
     //   }
     // });
-  }
+  },
 }
 </script>
 
 <style scoped>
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:400,500&display=swap");
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.alert {
+  position: fixed;
+  bottom: 4rem;
+}
 
 .login {
   transition: .1s;

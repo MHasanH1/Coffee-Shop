@@ -99,8 +99,14 @@
           </form>
 
           <div class="text-end">
-            <button @click="this.$router.push('/login')" type="button" class="btn btn-outline-light me-2">Login</button>
-            <button @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>
+            <div v-show="username" class="d-flex align-items-center gap-3">
+              <h4 class="m-0">Hello {{username}}!</h4>
+              <button @click="this.$router.push('/login')" type="button" class="btn btn-outline-danger me-2">Logout</button>
+            </div>
+            <div v-show="!username">
+              <button @click="this.$router.push('/login')" type="button" class="btn btn-outline-light me-2">Login</button>
+              <button @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>
+            </div>
           </div>
         </div>
       </div>
@@ -110,8 +116,8 @@
 
 
 <script>
-
 export default ({
+  props: ['username'],
   methods: {
 
   },
@@ -124,13 +130,13 @@ export default ({
 })
 </script>
 
-
 <style>
 .button {
   background: none;
   color: white;
   border: none;
 }
+
 .svgSize {
   width: 20px;
   height: 20px;

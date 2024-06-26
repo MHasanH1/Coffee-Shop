@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderCmp />
+    <HeaderCmp :username="username" />
     <Slider />
     <Popular />
   </div>
@@ -20,7 +20,13 @@ export default {
   },
   data() {
     return {
+      username: '',
+      sharedData: null,
     };
+  },
+  mounted() {
+    this.sharedData = JSON.parse(localStorage.getItem('sharedData'));
+    this.username = JSON.parse(this.sharedData.config.data).username;
   }
 }
 </script>
