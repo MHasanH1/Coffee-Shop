@@ -75,5 +75,9 @@ class AddToCartView(APIView):
         return Response(data=serialized.data,status=status.HTTP_200_OK)
 
         
-
-
+class LogoutView(APIView):
+    def post(self, request):
+        token = request.auth
+        if token:
+            Token.objects.filter(key=token).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
