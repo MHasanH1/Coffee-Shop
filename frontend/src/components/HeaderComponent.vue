@@ -85,11 +85,21 @@
               </router-link>
             </li>
             <li>
-              <router-link to="" class="nav-link px-2 text-white d-flex align-items-center gap-1">
-                Buy Sabad
+              <router-link to="/cart" class="nav-link px-2 text-white d-flex align-items-center gap-1">
+                my cart
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="svgSize size-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                 </svg>
+              </router-link>
+            </li>
+            <li v-if="isAuthenticated">
+              <router-link to="/profile" class="nav-link px-2 text-white d-flex align-items-center gap-1">
+                profile
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px">
+                  <path d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M12 12c2.7 0 4.98-2.19 5-4.9V7c0-2.7-2.19-5-4.9-5h-.2C9.2 2 7 4.2 7 6.9V7c0 2.71 2.3 4.99 5 5zM12 14c-3.93 0-7 3.07-7 7h2c0-2.76 2.24-5 5-5s5 2.24 5 5h2c0-3.93-3.07-7-7-7z"/>
+                </svg>
+
               </router-link>
             </li>
           </ul>
@@ -122,14 +132,18 @@ export default ({
   methods: {
 
   },
-  async mounted() {
+  mounted() {
     const dropdown = document.getElementsByClassName("dropdown-menu")[0];
     dropdown.addEventListener('click', (e) => {
-      e.stopPropagation();
+      e.stopPropagation();    
     });
+
+  },
+  async beforeCreate(){
     this.isAuthenticated=await checkAuthentication();
     console.log(this.isAuthenticated);
   }
+  
 })
 </script>
 

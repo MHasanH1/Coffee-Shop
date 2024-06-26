@@ -6,8 +6,8 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
 from rest_framework import generics, permissions
 from rest_framework import status
-from .serializers import UserCreationSerializer,ProductSerializer,OrderProductSerializer,OrderSerializer
-from .models import Vertical,Product,UserOrder,Order,OrderProduct
+from .serializers import UserCreationSerializer,ProductSerializer,OrderProductSerializer,OrderSerializer,UserSerializer
+from .models import Vertical,Product,UserOrder,Order,OrderProduct,User
 from rest_framework.decorators import api_view,permission_classes
 from django.db.models import Count
 
@@ -100,7 +100,7 @@ class LogoutView(APIView):
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
-def authenticate(request:Request):
+def authentication(request:Request):
     return Response(status=status.HTTP_200_OK)
 
 
@@ -112,5 +112,15 @@ class PopularView(APIView):
             
             serialized=ProductSerializer(top_products,many=True)
             return Response(serialized.data,status=status.HTTP_200_OK)
+    
+
+
+class ProfileView(APIView):
+    permission_classes=[permissions.IsAuthenticated]
+    def get(self,request:Request):
+        print(request.user.id)
+        user=User.objects.get(id=request.user.id)
+        serialized=UserSerializer(user).data
+        return Response(serialized,status=status.HTTP_200_OK)
 
 

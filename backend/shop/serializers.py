@@ -63,3 +63,10 @@ class OrderSerializer(serializers.ModelSerializer):
     def get_products(self,obj:Order):
         products=Product.objects.filter(order_products__order=obj)
         return ProductSerializer(products,many=True).data
+    
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields=('id','first_name','last_name','email','phonenumber','username')
