@@ -25,7 +25,7 @@
           </div>
         </div>
       </div>
-      <div class="d-flex my-4">
+      <div class="d-flex my-4" v-if="cards.length > 3">
         <button class="btn btn-outline-primary" v-if="!showAll" @click="showAllCards">See More</button>
         <button class="btn btn-success" v-if="showAll" @click="showLessCards">See Less</button>
       </div>
