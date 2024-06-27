@@ -71,7 +71,12 @@
                   <button type="button" class="btn btn-sm btn-outline-warning" v-if="isAdmin">Edit</button>
 <!--                  <button type="button" class="btn btn-sm btn-outline-success" @click="addToCart(card.id)">{{addBtnText}}</button>-->
                   <button type="button" class="btn btn-sm btn-outline-success" v-if="!card.in_cart" @click="addToCart(card)">add to cart</button>
-                  <button type="button" class="btn btn-sm btn-outline-success" v-else @click="removeFromCart(card)">remove from the cart</button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" v-else @click="removeFromCart(card)">remove from the cart</button>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button class="button text-danger fw-bold" @click="count >= 1 ? count-- : count = 0">-</button>
+                  <p class="m-0">{{count}}</p>
+                  <button class="button text-success fw-bold" @click="count++">+</button>
                 </div>
 <!--                <small class="text-body-secondary">9 mins</small>-->
               </div>
@@ -114,8 +119,7 @@ export default {
           coffee: 0,
           flour: 0 ,
           vertical : '',
-          in_cart : false
-
+          in_cart : false,
         }
       ],
       alertWarning: 'alert-warning',
@@ -125,6 +129,7 @@ export default {
       addStatus: "",
       cartItems: [],
       addBtnText: "Add to cart",
+      count: 0,
     }
   },
   computed: {
@@ -206,6 +211,11 @@ export default {
   mounted() {
     this.getPopulars();
   },
+  watch: {
+    count(Oval, Nval) {
+      console.log(Nval);
+    }
+  }
 }
 </script>
 
