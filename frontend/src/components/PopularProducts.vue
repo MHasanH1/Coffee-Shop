@@ -69,7 +69,9 @@
                 <div class="btn-group">
 <!--                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>-->
                   <button type="button" class="btn btn-sm btn-outline-warning" v-if="isAdmin">Edit</button>
-                  <button type="button" class="btn btn-sm btn-outline-success" @click="addToCart(card.id)">{{addBtnText}}</button>
+<!--                  <button type="button" class="btn btn-sm btn-outline-success" @click="addToCart(card.id)">{{addBtnText}}</button>-->
+                  <button type="button" class="btn btn-sm btn-outline-success" v-if="!card.in_cart" @click="addToCart(card)">add to cart</button>
+                  <button type="button" class="btn btn-sm btn-outline-success" v-else @click="removeFromCart(card)">remove from the cart</button>
                 </div>
 <!--                <small class="text-body-secondary">9 mins</small>-->
               </div>
@@ -112,6 +114,7 @@ export default {
           coffee: 0,
           flour: 0 ,
           vertical : '',
+          in_cart : false
 
         }
       ],
@@ -136,7 +139,8 @@ export default {
     showLessCards() {
       this.showAll = false;
     },
-    addToCart(id) {
+    addToCart(cart) {
+      let id=cart.id;
       axios.post(`http://localhost:8000/api/add-to-cart/${id}/`,{}, {
         headers: {
           'Authorization': `Token ${localStorage.getItem('token')}`
@@ -145,6 +149,7 @@ export default {
       .then(res => {
         // console.log("in then");
         console.log(res);
+        cart.in_cart=true; 
         this.addStatus = "add successfully";
         this.$refs.alertS.style.opacity = 1;
         setTimeout(() => {
@@ -152,6 +157,7 @@ export default {
         }, 2500);
       })
       .catch(err => {
+        console.log(err);
         if (err.response.status===302) {
           this.addStatus = "already exists in cart";
         }
@@ -168,11 +174,30 @@ export default {
         }
       })
       .then(res => {
+        console.log(res.data);
         this.cards = res.data;
       }).catch(err => {
         console.log(err);
       })
     },
+    removeFromCart(cart){
+      let id=cart.id;
+      axios.post('http://localhost:8000/api/remove-from-cart/',{
+        id:id
+      },{
+        headers:{
+          Authorization : `Token ${localStorage.getItem('token')}`
+        }
+      })
+      .then(res=>{
+        console.log(res.data);
+        cart.in_cart=false;
+        // this.cards=res.data;
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+    }
   },
   mounted() {
     this.getPopulars();

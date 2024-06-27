@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 from rest_framework import generics, permissions
 from rest_framework import status
 from .serializers import UserCreationSerializer,ProductSerializer,OrderProductSerializer,OrderSerializer,UserSerializer
-from .models import Vertical,Product,UserOrder,Order,OrderProduct,User
+from .models import Vertical,Product,UserOrder,Order,OrderProduct,User,Storage
 from rest_framework.decorators import api_view,permission_classes
 from django.db.models import Count
 
@@ -35,16 +35,16 @@ class LoginView(APIView):
         return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class ShowProductsByVerticals(APIView):
-    def get(self,request:Request):
+    def post(self,request:Request):
         i=request.data.get('ver')
         products=Product.objects.filter(vertical=i)
-        products_by_vertical = ProductSerializer(products,many=True).data
+        products_by_vertical = ProductSerializer(products,many=True,context={"request":request}).data
         return Response(products_by_vertical)
     
 
 class ProductView(APIView):
     def post(self,request:Request):
-        serializer = ProductSerializer(data=request.data)
+        serializer = ProductSerializer(data=request.data,context={"request":request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -64,21 +64,45 @@ class AddToCartView(APIView):
         order=user_order.order
         print(product_id)
         product=Product.objects.get(id=product_id)
+
         order_product,created=OrderProduct.objects.get_or_create(order=order,product=product)
-        serialized=OrderProductSerializer(order_product,context={"request":request})
-        if created:
-            
+        checked=order_product.check_product()
+        if checked[0]:
+            # if created:
+            #     order_product.delete()
+            # order_product.count+=1
+            # order_product.save()
+            sugar_storage=Storage.objects.get(name="sugar")
+            coffee_storage=Storage.objects.get(name="coffee")
+            flour_storage=Storage.objects.get(name="flour")
+            sugar_storage.amount-= order_product.product.sugar
+            coffee_storage.amount-= order_product.product.coffee
+            flour_storage.amount-= order_product.product.flour
+            sugar_storage.save()
+            coffee_storage.save()
+            flour_storage.save()
+            serialized=OrderProductSerializer(order_product,context={"request":request})
             return Response(serialized.data,status=status.HTTP_201_CREATED)
         else:
-            return Response({"message":"already exists in cart"},status=status.HTTP_302_FOUND)
+            return Response(data={"message":f"not enough storage for {checked[1]}"},status=status.HTTP_406_NOT_ACCEPTABLE)
+            
+        #     return Response(serialized.data,status=status.HTTP_201_CREATED)
+        # else:
+        #     return Response({"message":"already exists in cart"},status=status.HTTP_302_FOUND)
+        
+
+
+
         
 
 class CartView(APIView):
     permission_classes=[permissions.IsAuthenticated]
     def get(self,request:Request):
         user_order=UserOrder.objects.filter(user=request.user,is_active=True).last()
-        products=Product.objects.filter(order_products__order=user_order.order)
-        serialized = ProductSerializer(products,many=True).data
+        # products=Product.objects.filter(order_products__order=user_order.order)
+        print(user_order.order)
+        serialized = OrderSerializer(user_order.order,many=False,context={"request":request}).data
+
         return Response(data=serialized,status=status.HTTP_200_OK)
 
 
@@ -86,7 +110,7 @@ class OrderView(APIView):
     permission_classes=[permissions.IsAuthenticated]
     def get(self,request:Request):
         orders=Order.objects.filter(user_orders__user=request.user)
-        serialized=OrderSerializer(orders,many=True)
+        serialized=OrderSerializer(orders,many=True,context={"request":request})
         return Response(data=serialized.data,status=status.HTTP_200_OK)
 
         
@@ -110,7 +134,7 @@ class PopularView(APIView):
                     .annotate(order_count=Count('order_products'))
                     .order_by('-order_count')[:12])
             
-            serialized=ProductSerializer(top_products,many=True)
+            serialized=ProductSerializer(top_products,many=True,context={"request":request})
             return Response(serialized.data,status=status.HTTP_200_OK)
     
 
@@ -122,5 +146,17 @@ class ProfileView(APIView):
         user=User.objects.get(id=request.user.id)
         serialized=UserSerializer(user).data
         return Response(serialized,status=status.HTTP_200_OK)
+
+
+class RemoveFromCart(APIView):
+    def post(self,request:Request):
+        product_id=request.data.get('id')
+        product=Product.objects.get(id=product_id)
+        order=UserOrder.objects.filter(user=request.user,is_active=True).last().order
+        order_product=OrderProduct.objects.filter(order=order,product=product).first()
+        order_product.delete()
+        return Response({"message":"deleted"},status=status.HTTP_200_OK)
+    
+
 
 

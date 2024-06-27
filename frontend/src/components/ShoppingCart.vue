@@ -7,8 +7,8 @@
         </div>
       </div>
       <div v-else>
-        <div v-if="cartItems.length" class="list-group">
-          <div v-for="item in cartItems" :key="item.id" class="list-group-item d-flex justify-content-between align-items-center">
+        <div v-if="cart" class="list-group">
+          <div v-for="item in cart.products" :key="item.id" class="list-group-item d-flex justify-content-between align-items-center">
             <div>
               <h5 class="mb-1">{{ item.name }}</h5>
               <p class="mb-1">{{ item.vertical }} x ${{ item.price }}</p>
@@ -27,8 +27,11 @@
   export default {
     data() {
       return {
-        cartItems: [
-            {
+        cart: {
+          id : null,
+          purchase_amount : 0,
+          type : null,
+          products :[{
                 id: null,
                 name : "",
                 coffee : 0,
@@ -36,8 +39,8 @@
                 sugar:0,
                 vertical : '',
                 flour : 0,
-            }
-        ],
+            }]
+        },
         loading: true,
       };
     },
@@ -53,7 +56,8 @@
         })
         .then(res=>{
             // console.log(res.data);
-            this.cartItems=res.data;
+            this.cart=res.data;
+            console.log(res.data);
         })
         .catch(err=>{
             console.log(err);

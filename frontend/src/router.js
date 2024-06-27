@@ -5,9 +5,12 @@ import LogIn from "@/components/LogIn.vue";
 import ShopManagement from '@/components/ShopManagement.vue'
 import ShoppingCart from "./components/ShoppingCart.vue";
 import ProfileComponent from "./components/ProfileComponent.vue";
+import CartHistory from '@/components/CartHistory.vue';
+
 import AddProduct from '@/components/AddProduct.vue'
 import StackManagement from '@/components/StackManagement.vue'
 import ProductComponent from "@/components/ProductComponent.vue";
+
 
 const routes = [
     {path: "/", component: Home},
@@ -17,6 +20,7 @@ const routes = [
     {path: "/cart", component: ShoppingCart},
     {path: "/profile", component: ProfileComponent},
     {path: "/addProduct", component: AddProduct},
+    {path: "/history", component: CartHistory},
     {path: "/stackManagement", component: StackManagement},
     {path: "/products:vertical", component: ProductComponent},
 ]

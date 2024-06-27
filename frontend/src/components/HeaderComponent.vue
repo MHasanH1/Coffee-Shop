@@ -85,8 +85,8 @@
               </div>
             </li>
             <li>
-              <router-link to="" class="nav-link px-2 text-white d-flex align-items-center gap-1">
-                Buy History
+              <router-link to="/history" class="nav-link px-2 text-white d-flex align-items-center gap-1">
+                cart History
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="svgSize size-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                 </svg>
@@ -107,6 +107,13 @@
                   <path d="M0 0h24v24H0z" fill="none"/>
                   <path d="M12 12c2.7 0 4.98-2.19 5-4.9V7c0-2.7-2.19-5-4.9-5h-.2C9.2 2 7 4.2 7 6.9V7c0 2.71 2.3 4.99 5 5zM12 14c-3.93 0-7 3.07-7 7h2c0-2.76 2.24-5 5-5s5 2.24 5 5h2c0-3.93-3.07-7-7-7z"/>
                 </svg>
+              </router-link>
+            </li>
+            <li v-if="isAdmin">
+              <router-link to="/shopmanagement" class="nav-link px-2 text-white d-flex align-items-center gap-1">
+                Admin panel
+
+
               </router-link>
             </li>
           </ul>
@@ -140,13 +147,17 @@
 
 
 <script>
-import checkAuthentication from "../services";
-
+import {checkAuthentication} from "../services";
+import {checkAdministary} from "../services";
 export default ({
   props: ['username'],
   data(){
     return {
       isAuthenticated: false,
+
+      isAdmin:false,
+
+
     }
   },
   mounted() {
@@ -158,6 +169,7 @@ export default ({
   async beforeCreate(){
     this.isAuthenticated=await checkAuthentication();
     console.log(this.isAuthenticated);
+    this.isAdmin=await checkAdministary();
   }
   
 })
