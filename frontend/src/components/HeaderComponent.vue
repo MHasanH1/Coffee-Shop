@@ -12,65 +12,73 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                   </svg>
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu pe-2">
                   <li>
-                    <div class="btn-group dropend w-100">
-                      <button type="button" class="btn">
-                        Split dropend
+                    <div class="d-flex dropend w-100 justify-content-between">
+                      <button @click="this.$router.push('/products:Hot Drink')" type="button" class="btn w-100">
+                        Hot Drink
                       </button>
-                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split border-right" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropend</span>
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        <li><a class="dropdown-item" href="#">Something else else here</a></li>
-                      </ul>
+<!--                      <div class="self-dropdown">-->
+<!--                        <button type="button" class="self-dropbtn btn dropdown-toggle dropdown-toggle-split border-0">-->
+<!--                          <span class="visually-hidden">Toggle Dropend</span>-->
+<!--                        </button>-->
+<!--                        <div class="self-dropdown-content">-->
+<!--                          <a href="#">Link 1</a>-->
+<!--                          <a href="#">Link 2</a>-->
+<!--                          <a href="#">Link 3</a>-->
+<!--                        </div>-->
+<!--                      </div>-->
                     </div>
                   </li>
                   <li>
-                    <div class="btn-group dropend w-100">
-                      <button type="button" class="btn">
-                        Split dropend
+                    <div class="d-flex dropend w-100 justify-content-between">
+                      <button @click="this.$router.push('/products:Cold Drink')" type="button" class="btn w-100">
+                        Cold Drink
                       </button>
-                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split border-right" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropend</span>
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        <li><a class="dropdown-item" href="#">Something else else here</a></li>
-                      </ul>
+<!--                      <div class="self-dropdown">-->
+<!--                        <button type="button" class="self-dropbtn btn dropdown-toggle dropdown-toggle-split border-0">-->
+<!--                          <span class="visually-hidden">Toggle Dropend</span>-->
+<!--                        </button>-->
+<!--                        <div class="self-dropdown-content">-->
+<!--                          <a href="#">Link 1</a>-->
+<!--                          <a href="#">Link 2</a>-->
+<!--                          <a href="#">Link 3</a>-->
+<!--                        </div>-->
+<!--                      </div>-->
                     </div>
                   </li>
                   <li>
-                    <div class="btn-group dropend w-100">
-                      <button type="button" class="btn">
-                        Split dropend
+                    <div class="d-flex dropend w-100 justify-content-between">
+                      <button @click="this.$router.push('/products:Cakes')" type="button" class="btn w-100">
+                        Cakes
                       </button>
-                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split border-right" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropend</span>
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        <li><a class="dropdown-item" href="#">Something else else here</a></li>
-                      </ul>
+<!--                      <div class="self-dropdown">-->
+<!--                        <button type="button" class="self-dropbtn btn dropdown-toggle dropdown-toggle-split border-0">-->
+<!--                          <span class="visually-hidden">Toggle Dropend</span>-->
+<!--                        </button>-->
+<!--                        <div class="self-dropdown-content">-->
+<!--                          <a href="#">Link 1</a>-->
+<!--                          <a href="#">Link 2</a>-->
+<!--                          <a href="#">Link 3</a>-->
+<!--                        </div>-->
+<!--                      </div>-->
                     </div>
                   </li>
                   <li>
-                    <div class="btn-group dropend w-100">
-                      <button type="button" class="btn">
-                        Split dropend
+                    <div class="d-flex dropend w-100 justify-content-between">
+                      <button @click="this.$router.push('/products:Milk')" type="button" class="btn w-100">
+                        Milk
                       </button>
-                      <button type="button" class="btn dropdown-toggle dropdown-toggle-split border-right" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="visually-hidden">Toggle Dropend</span>
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        <li><a class="dropdown-item" href="#">Something else else here</a></li>
-                      </ul>
+<!--                      <div class="self-dropdown">-->
+<!--                        <button type="button" class="self-dropbtn btn dropdown-toggle dropdown-toggle-split border-0">-->
+<!--                          <span class="visually-hidden">Toggle Dropend</span>-->
+<!--                        </button>-->
+<!--                        <div class="self-dropdown-content">-->
+<!--                          <a href="#">Link 1</a>-->
+<!--                          <a href="#">Link 2</a>-->
+<!--                          <a href="#">Link 3</a>-->
+<!--                        </div>-->
+<!--                      </div>-->
                     </div>
                   </li>
                 </ul>
@@ -99,7 +107,6 @@
                   <path d="M0 0h24v24H0z" fill="none"/>
                   <path d="M12 12c2.7 0 4.98-2.19 5-4.9V7c0-2.7-2.19-5-4.9-5h-.2C9.2 2 7 4.2 7 6.9V7c0 2.71 2.3 4.99 5 5zM12 14c-3.93 0-7 3.07-7 7h2c0-2.76 2.24-5 5-5s5 2.24 5 5h2c0-3.93-3.07-7-7-7z"/>
                 </svg>
-
               </router-link>
             </li>
             <li v-if="isAdmin">
@@ -125,11 +132,11 @@
 <!--              <button @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>-->
 <!--            </div>-->
 
-            <div class="d-flex align-items-center flex-row-reverse gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <h4 class="m-0">Hello {{username}}!</h4>
               <button v-if="!isAuthenticated" @click="this.$router.push('/login')" type="button" class="btn btn-outline-light me-2">Login</button>
               <button v-if="!isAuthenticated" @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>
               <button v-else @click="this.$router.push('/login')" type="button" class="btn btn-outline-danger me-2 d-flex">Logout</button>
-              <h4 class="m-0">Hello {{username}}!</h4>
             </div>
           </div>
         </div>
@@ -153,15 +160,11 @@ export default ({
 
     }
   },
-  methods: {
-
-  },
   mounted() {
-    const dropdown = document.getElementsByClassName("dropdown-menu")[0];
-    dropdown.addEventListener('click', (e) => {
-      e.stopPropagation();    
-    });
-
+    // const dropdown = document.getElementsByClassName("dropdown-menu")[0];
+    // dropdown.addEventListener('click', (e) => {
+    //   e.stopPropagation();
+    // });
   },
   async beforeCreate(){
     this.isAuthenticated=await checkAuthentication();
@@ -182,6 +185,46 @@ export default ({
 .svgSize {
   width: 20px;
   height: 20px;
+}
+
+.self-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.self-dropbtn {
+  background-color: #3498db;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.self-dropdown-content {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  background-color: white;
+  z-index: 1;
+}
+
+.self-dropdown-content a {
+  color: black;
+  padding: 10px;
+  text-decoration: none;
+  display: block;
+}
+
+.self-dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.self-dropdown:hover .self-dropdown-content {
+  display: block;
 }
 
 </style>

@@ -31,9 +31,16 @@
       </form>
     </main>
     <transition name="fade">
-      <div v-show="loginErr" ref="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <div v-show="loginErr !== 'You logged in successful' && loginErr !== ''" ref="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Error!</strong> {{ loginErr }}
         <button type="button" class="btn-close" @click="this.$refs.alert.style.opacity = 0" aria-label="Close"></button>
+      </div>
+    </transition>
+
+    <transition name="fade">
+      <div v-show="loginErr === 'You logged in successful'" ref="alertS" class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> {{ loginErr }}
+        <button type="button" class="btn-close" @click="this.$refs.alertS.style.opacity = 0" aria-label="Close"></button>
       </div>
     </transition>
 
@@ -46,7 +53,6 @@
 <script>
 
 import axios from "axios";
-import eventBus from '../EventBus';
 
 export default {
   data() {
@@ -64,9 +70,14 @@ export default {
       .then(res=>{
         localStorage.setItem('token',res.data.token);
         localStorage.setItem('sharedData', JSON.stringify(res));
-        // console.log(res);
-        eventBus.data = res;
-        this.$router.push('/');
+        this.loginErr = "You logged in successful";
+        this.$refs.alertS.style.opacity = 1;
+        setTimeout(() => {
+          this.$refs.alertS.style.opacity = 0;
+        }, 1800);
+        setTimeout(()=> {
+          this.$router.push('/');
+        }, 2000);
       })
       .catch(err=>{
         this.loginErr = err.response.data.error;
