@@ -1,25 +1,70 @@
 <template>
   <div class="album py-5 bg-body-tertiary">
     <div class="container">
+      <h2 class="text-center mb-4">Popular Products</h2>
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
         <div v-for="(card, index) in visibleCards" :key="index" class="col">
           <div class="card shadow-sm">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+            <img class="bd-placeholder-img card-img-top" :src="card?.image" :alt="card?.name" :title="card?.name" width="100%" height="225" />
             <div class="card-body">
               <h4>{{card?.name}}</h4>
-              <p class="card-text">coffee {{card?.coffee}}</p>
-              <p class="card-text">flour {{card?.flour}}</p>
-              <p class="card-text">price {{card?.price}}</p>
-              <p class="card-text">sugar {{card?.sugar}}</p>
-              <p class="card-text">vertical {{card?.vertical}}</p>
+              <div class="d-flex align-items-center gap-1 mb-3 mt-1">
+                <h6 class="card-text m-0">Vertical: {{card?.vertical}}</h6>
+                <svg v-if="card?.vertical === 'hot drink'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="svgSize size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z" />
+                </svg>
+                <img v-else-if="card?.vertical === 'cold drink'" class="svgSize" src="../assets/cold.png" alt="vertical" />
+              </div>
+              <div class="d-flex align-items-center gap-2 my-2">
+                <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                      d="M6 2.5C5.44772 2.5 5 2.94772 5 3.5V5.5C5 6.05228 5.44772 6.5 6 6.5C6.55228 6.5 7 6.05228 7 5.5V3.5C7 2.94772 6.55228 2.5 6 2.5Z"
+                      fill="currentColor"
+                  />
+                  <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M13 21.5C15.973 21.5 18.441 19.3377 18.917 16.5H19C21.2091 16.5 23 14.7091 23 12.5C23 10.2909 21.2091 8.5 19 8.5V7.5H1V15.5C1 18.8137 3.68629 21.5 7 21.5H13ZM3 9.5V15.5C3 17.7091 4.79086 19.5 7 19.5H13C15.2091 19.5 17 17.7091 17 15.5V9.5H3ZM21 12.5C21 13.6046 20.1046 14.5 19 14.5V10.5C20.1046 10.5 21 11.3954 21 12.5Z"
+                      fill="currentColor"
+                  />
+                  <path
+                      d="M9 3.5C9 2.94772 9.44771 2.5 10 2.5C10.5523 2.5 11 2.94772 11 3.5V5.5C11 6.05228 10.5523 6.5 10 6.5C9.44771 6.5 9 6.05228 9 5.5V3.5Z"
+                      fill="currentColor"
+                  />
+                  <path
+                      d="M14 2.5C13.4477 2.5 13 2.94772 13 3.5V5.5C13 6.05228 13.4477 6.5 14 6.5C14.5523 6.5 15 6.05228 15 5.5V3.5C15 2.94772 14.5523 2.5 14 2.5Z"
+                      fill="currentColor"
+                  />
+                </svg><p class="card-text">Coffee:  {{card?.coffee}}%</p>
+              </div>
+              <div class="d-flex align-items-center gap-2 my-2">
+                <img src="../assets/flour.png" class="svgSize" alt="flour" />
+                <p class="card-text">Flour: {{card?.flour}}%</p>
+              </div>
+              <div class="d-flex align-items-center gap-2 my-2">
+                <img src="../assets/sugar.png" class="svgSize" alt="sugar" />
+                <p class="card-text">Sugar: {{card?.sugar}}%</p>
+              </div>
+
+              <div class="d-flex align-items-center gap-2 my-2">
+                <img src="../assets/price.png" class="svgSize" alt="price" />
+                <p class="card-text fw-bold">Price: {{card?.price}}</p>
+              </div>
 
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary" v-if="isAdmin">Edit</button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary" @click="addToCart(card.id)">add to cart</button>
+<!--                  <button type="button" class="btn btn-sm btn-outline-secondary">View</button>-->
+                  <button type="button" class="btn btn-sm btn-outline-warning" v-if="isAdmin">Edit</button>
+                  <button type="button" class="btn btn-sm btn-outline-success" @click="addToCart(card.id)">add to cart</button>
                 </div>
-                <small class="text-body-secondary">9 mins</small>
+<!--                <small class="text-body-secondary">9 mins</small>-->
               </div>
             </div>
           </div>
@@ -30,6 +75,12 @@
         <button class="btn btn-success" v-if="showAll" @click="showLessCards">See Less</button>
       </div>
     </div>
+    <transition name="fade">
+      <div v-show="addStatus" ref="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error!</strong> {{ addStatus }}
+        <button type="button" class="btn-close" @click="this.$refs.alert.style.opacity = 0" aria-label="Close"></button>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -51,6 +102,7 @@ export default {
       ],
       showAll: false,
       isAdmin: false,
+      addStatus: "",
     }
   },
   computed: {
@@ -66,45 +118,59 @@ export default {
     showLessCards() {
       this.showAll = false;
     },
-    addToCart(id){
+    addToCart(id) {
       axios.post(`http://localhost:8000/api/add-to-cart/${id}/`,{}, {
-        headers:{
+        headers: {
           'Authorization': `Token ${localStorage.getItem('token')}`
         }
       })
-      .then(res=>{
+      .then(res => {
         // console.log("in then");
         console.log(res);
-        alert('add successfully')
+        this.addStatus = "add successfully";
+        this.$refs.alert.style.opacity = 1;
+        setTimeout(() => {
+          this.$refs.alert.style.opacity = 0;
+        }, 2500);
       })
-      .catch(err=>{
-        if (err.response.status===302){
-          alert('already exists in cart')
+      .catch(err => {
+        if (err.response.status===302) {
+          this.addStatus = "already exists in cart";
         }
-        console.log(err);
+        this.$refs.alert.style.opacity = 1;
+        setTimeout(() => {
+          this.$refs.alert.style.opacity = 0;
+        }, 2500);
       })
     },
-    getPopulars(){
+    getPopulars() {
       axios.get('http://localhost:8000/api/get-populars/',{
-        headers:{
+        headers: {
           Authorization : `Token ${localStorage.getItem('token')}`
         }
       })
-      .then(res=>{
-        console.log(res);
-        this.cards=res.data;
-      }).catch(err=>{
-
+      .then(res => {
+        this.cards = res.data;
+      }).catch(err => {
         console.log(err);
       })
     }
   },
-  mounted(){
+  mounted() {
     this.getPopulars();
   }
 }
 </script>
 
 <style scoped>
+.alert {
+  width: 50%;
+  margin: 0 auto;
+  bottom: 5rem;
+}
 
+.svgSize {
+  width: 25px;
+  height: 25px;
+}
 </style>

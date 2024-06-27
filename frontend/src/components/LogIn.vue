@@ -17,13 +17,6 @@
           <span class="password-toggle-icon"><i class="fa fa-eye"></i></span>
         </div>
 
-        <!--      <div class="form-check text-start my-3">-->
-        <!--        <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">-->
-        <!--        <label class="form-check-label" for="flexCheckDefault">-->
-        <!--          Show Password-->
-        <!--        </label>-->
-        <!--      </div>-->
-
         <div class="form-check text-start my-3">
           <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
           <label class="form-check-label" for="flexCheckDefault">
@@ -38,9 +31,9 @@
       </form>
     </main>
     <transition name="fade">
-      <div v-show="loginErr" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <div v-show="loginErr" ref="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Error!</strong> {{ loginErr }}
-        <button type="button" class="btn-close" @click="this.loginErr = ''" aria-label="Close"></button>
+        <button type="button" class="btn-close" @click="this.$refs.alert.style.opacity = 0" aria-label="Close"></button>
       </div>
     </transition>
 
@@ -77,7 +70,10 @@ export default {
       })
       .catch(err=>{
         this.loginErr = err.response.data.error;
-        console.log(err);
+        this.$refs.alert.style.opacity = 1;
+        setTimeout(() => {
+          this.$refs.alert.style.opacity = 0;
+        }, 3000);
       })
     }
   },
