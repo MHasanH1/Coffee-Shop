@@ -24,9 +24,10 @@ class UserCreationSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     in_cart = serializers.SerializerMethodField()
+    count_in_cart=serializers.SerializerMethodField()
     class Meta:
         model=Product
-        fields=('id','name','sugar','coffee','flour','vertical','price','in_cart')
+        fields=('id','name','sugar','coffee','flour','vertical','price','in_cart','count_in_cart')
     
     def create(self,validated_data):
         product=Product(
@@ -41,19 +42,28 @@ class ProductSerializer(serializers.ModelSerializer):
         return product
     
     def get_in_cart(self,obj:Product):
-        pass
+        user=self.context['request'].user
+        user_orders=UserOrder.objects.filter(user=user,order__order_products__product=obj)
+        if user_orders.exists():
+            return user_orders.last().is_active
+        return False
+    
+    def get_count_in_cart(self,obj:Product):
+        user=self.context['request'].user
+        cart=UserOrder.objects.filter(user=user,is_active=True).last()
+        order_products=OrderProduct.objects.filter(order=cart.order,product=obj)
+        return order_products.count()
+
         
     
 
 class OrderProductSerializer(serializers.ModelSerializer):
-    is_ordered_now=serializers.SerializerMethodField()
     class Meta:
         model = OrderProduct
-        fields=('id','product','order','is_ordered_now')
+        fields=('id','product','order')
 
-    def get_is_ordered_now(self,obj:OrderProduct):
-        user=self.context['request'].user
-        return UserOrder.objects.filter(user=user,order=obj.order).last().is_active
+
+
     
 
     
@@ -66,7 +76,7 @@ class OrderSerializer(serializers.ModelSerializer):
     
     def get_products(self,obj:Order):
         products=Product.objects.filter(order_products__order=obj)
-        return ProductSerializer(products,many=True).data
+        return ProductSerializer(products,many=True,context=self.context).data
     
 
 class UserSerializer(serializers.ModelSerializer):

@@ -102,7 +102,7 @@
 
               </router-link>
             </li>
-            <li v-if="!isAdmin">
+            <li v-if="isAdmin">
               <router-link to="/shopmanagement" class="nav-link px-2 text-white d-flex align-items-center gap-1">
                 Admin panel
 

@@ -15,4 +15,5 @@ urlpatterns = [
     path('check-auth/',views.authentication),
     path('get-populars/',views.PopularView.as_view()),
     path('profile/',views.ProfileView.as_view()),
+    path('remove-from-cart/',views.RemoveFromCart.as_view()),
 ]
