@@ -150,6 +150,7 @@ export default {
           })
     },
     getPopulars() {
+      console.log(this.vertical.toLowerCase(), "fsdkjfdsjfgdsgfhdsg")
       axios.post('http://localhost:8000/api/vertical/',{
         ver: this.vertical.toLowerCase()
       })

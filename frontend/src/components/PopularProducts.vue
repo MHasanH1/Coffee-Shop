@@ -71,7 +71,7 @@
                   <button type="button" class="btn btn-sm btn-outline-warning" v-if="isAdmin">Edit</button>
 <!--                  <button type="button" class="btn btn-sm btn-outline-success" @click="addToCart(card.id)">{{addBtnText}}</button>-->
                   <button type="button" class="btn btn-sm btn-outline-success" v-if="!card.in_cart" @click="addToCart(card)">add to cart</button>
-                  <button type="button" class="btn btn-sm btn-outline-success" v-else @click="removeFromCart(card)">remove from the cart</button>
+                  <button type="button" class="btn btn-sm btn-outline-danger" v-else @click="removeFromCart(card)">remove from the cart</button>
                 </div>
 <!--                <small class="text-body-secondary">9 mins</small>-->
               </div>
