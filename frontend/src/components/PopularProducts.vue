@@ -138,7 +138,10 @@ export default {
         }, 2500);
       })
       .catch(err => {
-        console.log(err);
+        if (err.response.status===406){
+          this.addStatus=err.response.data["message"];
+
+        }
         if (err.response.status===302) {
           this.addStatus = "already exists in cart";
         }
