@@ -1,5 +1,3 @@
-import { reactive } from 'vue';
-
-const eventBus = reactive({});
-
-export default eventBus;
+import mitt from 'mitt';
+const emitter = mitt();
+export default emitter;
