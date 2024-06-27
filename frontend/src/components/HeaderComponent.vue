@@ -125,9 +125,12 @@
 <!--              <button @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>-->
 <!--            </div>-->
 
-            <button v-if="!isAuthenticated" @click="this.$router.push('/login')" type="button" class="btn btn-outline-light me-2">Login</button>
-            <button v-if="!isAuthenticated" @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>
-            <button v-else @click="this.$router.push('/login')" type="button" class="btn btn-outline-danger me-2">logout</button>
+            <div class="d-flex align-items-center flex-row-reverse gap-3">
+              <button v-if="!isAuthenticated" @click="this.$router.push('/login')" type="button" class="btn btn-outline-light me-2">Login</button>
+              <button v-if="!isAuthenticated" @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>
+              <button v-else @click="this.$router.push('/login')" type="button" class="btn btn-outline-danger me-2 d-flex">Logout</button>
+              <h4 class="m-0">Hello {{username}}!</h4>
+            </div>
           </div>
         </div>
       </div>
@@ -144,7 +147,9 @@ export default ({
   data(){
     return {
       isAuthenticated: false,
+
       isAdmin:false,
+
 
     }
   },

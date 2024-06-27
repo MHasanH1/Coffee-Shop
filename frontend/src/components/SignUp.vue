@@ -45,7 +45,7 @@
       <hr class="my-3" />
 
       <div class="user-box">
-        <input class="mb-1" type="number" autocomplete required v-model="user.phonenumber"/>
+        <input class="mb-1" type="text" autocomplete required v-model.number="user.phonenumber"/>
         <label>Phone Number</label>
       </div>
 
@@ -72,7 +72,7 @@
     <transition name="fade">
       <div v-show="signupErr" ref="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Error!</strong> {{ signupErr }}
-        <button type="button" class="btn-close" @click="this.signupErr = ''" aria-label="Close"></button>
+        <button type="button" class="btn-close" @click="this.$refs.alert.style.opacity = 0" aria-label="Close"></button>
       </div>
     </transition>
   </div>
@@ -118,9 +118,6 @@ export default {
           else if (key === 'email')
             this.signupErr += err.response.data.email + ' '
         }
-        console.log(this.signupErr)
-        // this.signupErr = err.response.data.email[0] || err.response.data.username[0] || '';
-        console.log(err.response.data);
         this.$refs.alert.style.opacity = 1;
         setTimeout(() => {
           this.$refs.alert.style.opacity = 0;

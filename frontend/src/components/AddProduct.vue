@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex justify-content-center align-items-center my-5">
-      <img src="../assets/img/logo.png" style="width: 30%"/>
+      <img src="../assets/img/addProduct.png" style="width: 30%"/>
 
       <form class="form-signin mx-auto" style="width: 40%">
         <div class="user-box">

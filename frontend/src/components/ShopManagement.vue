@@ -15,8 +15,10 @@
     </div>
     <div class="d-flex gap-2">
       <div class="w-25 bg-info p-2">
-        <button class="fw-bold d-block my-1 btn btn-outline-dark border-0">Stack Management</button>
-        <button class="fw-bold d-block btn btn-outline-dark border-0" @click="this.$router.push('addProduct/')">Add Product</button>
+
+        <button @click="this.$router.push('/stackManagement')" class="fw-bold d-block my-1 btn btn-outline-dark border-0">Stack Management</button>
+        <button @click="this.$router.push('/addProduct')" class="fw-bold d-block btn btn-outline-dark border-0">Add Product</button>
+
       </div>
       <div class="chart-container w-75">
         <h1 class="text-center">{{!selectedOption ? 'Coffee' : selectedOption}}</h1>

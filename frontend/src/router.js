@@ -5,8 +5,10 @@ import LogIn from "@/components/LogIn.vue";
 import ShopManagement from '@/components/ShopManagement.vue'
 import ShoppingCart from "./components/ShoppingCart.vue";
 import ProfileComponent from "./components/ProfileComponent.vue";
-import AddProduct from '@/components/AddProduct.vue';
 import CartHistory from '@/components/CartHistory.vue';
+
+import AddProduct from '@/components/AddProduct.vue'
+import StackManagement from '@/components/StackManagement.vue'
 
 
 const routes = [
@@ -18,6 +20,8 @@ const routes = [
     {path: "/profile", component: ProfileComponent},
     {path: "/addProduct", component: AddProduct},
     {path: "/history", component: CartHistory},
+    {path: "/stackManagement", component: StackManagement},
+
 ]
 
 const router = createRouter({
