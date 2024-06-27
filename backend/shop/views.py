@@ -77,8 +77,10 @@ class CartView(APIView):
     permission_classes=[permissions.IsAuthenticated]
     def get(self,request:Request):
         user_order=UserOrder.objects.filter(user=request.user,is_active=True).last()
-        products=Product.objects.filter(order_products__order=user_order.order)
-        serialized = ProductSerializer(products,many=True).data
+        # products=Product.objects.filter(order_products__order=user_order.order)
+        print(user_order.order)
+        serialized = OrderSerializer(user_order.order,many=False).data
+
         return Response(data=serialized,status=status.HTTP_200_OK)
 
 

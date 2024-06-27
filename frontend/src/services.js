@@ -19,4 +19,21 @@ const checkAuthentication =async () => {
 
 }
 
-export default checkAuthentication;
+const checkAdministary =async () =>{
+    if (await checkAuthentication()){
+        return await axios.get('http://localhost:8000/api/profile/',{
+            headers:{
+                Authorization : `Token ${localStorage.getItem('token')}`
+            }
+        })
+        .then(res=>{
+            return res.data.is_admin;
+        })
+        .catch(err=>{
+            console.log(err);
+        })
+    }
+    return false;
+}
+
+export {checkAuthentication,checkAdministary};

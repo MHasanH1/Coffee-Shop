@@ -23,10 +23,10 @@ class UserCreationSerializer(serializers.ModelSerializer):
         return user
 
 class ProductSerializer(serializers.ModelSerializer):
-    # vertical = serializers.CharField(source='vertical.label')
+    in_cart = serializers.SerializerMethodField()
     class Meta:
         model=Product
-        fields=('id','name','sugar','coffee','flour','vertical','price')
+        fields=('id','name','sugar','coffee','flour','vertical','price','in_cart')
     
     def create(self,validated_data):
         product=Product(
@@ -39,6 +39,10 @@ class ProductSerializer(serializers.ModelSerializer):
         )
         product.save()
         return product
+    
+    def get_in_cart(self,obj:Product):
+        pass
+        
     
 
 class OrderProductSerializer(serializers.ModelSerializer):
@@ -69,4 +73,4 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields=('id','first_name','last_name','email','phonenumber','username')
+        fields=('id','first_name','last_name','email','phonenumber','username','is_admin')

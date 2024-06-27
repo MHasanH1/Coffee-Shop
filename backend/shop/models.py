@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models import Sum
 # Create your models here.
 
 class User(AbstractUser):
@@ -8,7 +9,10 @@ class User(AbstractUser):
 
 
 class Order(models.Model):
-    purchase_amount=models.IntegerField(null=True,blank=True)
+    @property
+    def purchase_amount(self):
+        total_price=Product.objects.filter(order_products__order=self).aggregate(total=Sum('price'))['total']
+        return total_price if total_price is not None else 0
     type=models.BooleanField(null=True,blank=True)
 
 
