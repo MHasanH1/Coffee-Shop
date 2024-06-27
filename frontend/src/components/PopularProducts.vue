@@ -157,6 +157,7 @@ export default {
         }, 2500);
       })
       .catch(err => {
+        console.log(err.response);
         if (err.response.status===406){
           this.addStatus=err.response.data["message"];
 

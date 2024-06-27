@@ -68,8 +68,7 @@ class AddToCartView(APIView):
         order_product,created=OrderProduct.objects.get_or_create(order=order,product=product)
         checked=order_product.check_product()
         if checked[0]:
-            # if created:
-            #     order_product.delete()
+
             # order_product.count+=1
             # order_product.save()
             sugar_storage=Storage.objects.get(name="sugar")
@@ -84,6 +83,8 @@ class AddToCartView(APIView):
             serialized=OrderProductSerializer(order_product,context={"request":request})
             return Response(serialized.data,status=status.HTTP_201_CREATED)
         else:
+            if created:
+                order_product.delete()
             return Response(data={"message":f"not enough storage for {checked[1]}"},status=status.HTTP_406_NOT_ACCEPTABLE)
             
         #     return Response(serialized.data,status=status.HTTP_201_CREATED)
@@ -154,8 +155,19 @@ class RemoveFromCart(APIView):
         product=Product.objects.get(id=product_id)
         order=UserOrder.objects.filter(user=request.user,is_active=True).last().order
         order_product=OrderProduct.objects.filter(order=order,product=product).first()
-        order_product.delete()
-        return Response({"message":"deleted"},status=status.HTTP_200_OK)
+        sugar_storage=Storage.objects.get(name="sugar")
+        coffee_storage=Storage.objects.get(name="coffee")
+        flour_storage=Storage.objects.get(name="flour")
+        if order_product:
+            sugar_storage.amount-= order_product.product.sugar
+            coffee_storage.amount-= order_product.product.coffee
+            flour_storage.amount-= order_product.product.flour
+            sugar_storage.save()
+            coffee_storage.save()
+            flour_storage.save()
+            order_product.delete()
+            return Response({"message":"deleted"},status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
 
 
