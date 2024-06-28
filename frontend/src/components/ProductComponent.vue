@@ -114,15 +114,12 @@ export default {
       vertical: "",
     };
   },
-  created() {
-  },
   mounted() {
     this.vertical = this.$route.params.vertical.slice(1);
     this.getPopulars();
   },
   updated() {
     this.vertical = this.$route.params.vertical.slice(1);
-    this.getPopulars();
   },
   methods: {
     addToCart(id) {
@@ -150,7 +147,7 @@ export default {
           })
     },
     getPopulars() {
-      console.log(this.vertical.toLowerCase(), "fsdkjfdsjfgdsgfhdsg")
+      console.log(this.vertical.toLowerCase())
       axios.post('http://localhost:8000/api/vertical/',{
         ver: this.vertical.toLowerCase()
       })
@@ -162,6 +159,13 @@ export default {
       this.loading = false;
     },
   },
+  watch: {
+    vertical(nval, oval) {
+      if (oval !== '') {
+        this.getPopulars();
+      }
+    }
+  }
 };
 </script>
 

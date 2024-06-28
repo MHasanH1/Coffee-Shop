@@ -154,10 +154,7 @@ export default ({
   data(){
     return {
       isAuthenticated: false,
-
       isAdmin:false,
-
-
     }
   },
   mounted() {

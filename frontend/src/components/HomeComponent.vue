@@ -1,5 +1,6 @@
 <template>
   <div>
+    <HeaderCmp />
     <Slider />
     <Popular />
   </div>
@@ -9,11 +10,13 @@
 
 import Slider from "./SliderComponent.vue";
 import Popular from "./PopularProducts.vue";
+import HeaderCmp from "@/components/HeaderComponent.vue";
 
 export default {
   components: {
     Slider,
     Popular,
+    HeaderCmp
   },
 }
 </script>
