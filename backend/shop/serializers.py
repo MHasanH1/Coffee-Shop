@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from .models import User,Product,OrderProduct,UserOrder,Order,Storage
+from django.utils import timezone
+from collections import defaultdict
+from datetime import datetime, timedelta
 
 class UserCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -101,3 +104,35 @@ class UserOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserOrder
         fields= ('id','user','order','is_active','datetime')
+
+
+
+class CustomProductSerializer(serializers.ModelSerializer):
+    history = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = ['id','name', 'history']
+
+    def get_history(self, obj):
+        three_months_ago = timezone.now() - timedelta(days=90)
+        user_orders = UserOrder.objects.filter(
+            order__order_products__product=obj,
+            datetime__gte=three_months_ago
+        )
+
+        # Group by month
+        user_orders_by_month = defaultdict(int)
+        for user_order in user_orders:
+            month = user_order.datetime.strftime('%B')
+            user_orders_by_month[month] += 1
+
+        # Format the result
+        history = []
+        for month, count in user_orders_by_month.items():
+            history.append({
+                'month': month,
+                'count':count
+            })
+
+        return history

@@ -18,4 +18,5 @@ urlpatterns = [
     path('remove-from-cart/',views.RemoveFromCart.as_view()),
     path('supply/',views.SupplyView.as_view()),
     path('confirm-cart/',views.ConfirmCartView.as_view()),
+    path('chart/',views.ChartView.as_view()),
 ]

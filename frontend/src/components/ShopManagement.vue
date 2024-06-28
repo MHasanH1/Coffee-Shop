@@ -28,12 +28,12 @@
             :data="chartData"
         />
           <fieldset class="d-flex align-items-center gap-5">
-            <div class="d-flex align-items-center gap-1">
-              <input type="radio" value="Coffee" v-model="selectedOption" checked />
-              <label for="huey">Coffee</label>
+            <div class="d-flex align-items-center gap-1" v-for="product in products" :key="product.id">
+              <input type="radio" :value="product.name" v-model="selectedOption" @click="select(product)"/>
+              <label for="huey">{{ product.name }}</label>
             </div>
 
-            <div class="d-flex align-items-center gap-1">
+            <!-- <div class="d-flex align-items-center gap-1">
               <input type="radio" value="Cake" v-model="selectedOption" />
               <label for="dewey">Cake</label>
             </div>
@@ -41,7 +41,7 @@
             <div class="d-flex align-items-center gap-1">
               <input type="radio" value="Milk" v-model="selectedOption" />
               <label for="louie">Milk</label>
-            </div>
+            </div> -->
           </fieldset>
       </div>
     </div>
@@ -51,6 +51,7 @@
 <script>
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import axios from 'axios';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
@@ -60,15 +61,51 @@ export default {
   data() {
     return {
       chartData: {
-        labels: [ 'January', 'February', 'March' ],
-        datasets: [ { data: [65, 20, 12] } ]
+        labels: ['mmd'],
+        datasets: [ { data: [1] } ]
       },
       chartOptions: {
         responsive: true
       },
       selectedOption: null,
+      products:[
+        {
+          id : 0,
+          name : '',
+          history:{
+            month : '',
+            count : 0,
+          }
+
+        }
+      ],
     }
   },
+  methods:{
+    getData(){
+      axios.get('http://localhost:8000/api/chart/')
+      .then(res=>{
+        console.log(res.data);
+        this.products=res.data;
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+    },
+    select(product){
+      console.log(product);
+      this.chartData.labels = product.history.map(item => item.month);
+      // this.chartData.labels=array;
+      // this.chartData.datasets[0].data = product.history.map(item => item.count);
+      console.log(this.chartData.labels);
+      // console.log(this.chartData.datasets[0].data);
+    }
+  },
+  mounted(){
+    this.getData();
+    console.log(this.chartData.labels);
+    // console.log(this.chartData.datasets[0].data);
+  }
 }
 </script>
 
