@@ -2,12 +2,12 @@
     <div class="container mt-5">
       <div class="profile-header d-flex align-items-center mb-4">
         <div class="profile-picture">
-          <img :src="user.profilePicture" alt="Profile Picture" class="rounded-circle" width="150" height="150">
+          <img :src="getAbsouluteURL(user.profile)" alt="Profile Picture" class="rounded-circle" width="150" height="150">
         </div>
-        <div class="profile-info ml-4">
+        <!-- <div class="profile-info ml-4">
           <h1>{{ user.name }}</h1>
           <p class="text-muted">{{ user.email }}</p>
-        </div>
+        </div> -->
       </div>
   
       <h2>Edit Profile</h2>
@@ -49,7 +49,7 @@ export default {
           phonenumber: '',
           first_name: '',
           last_name:'',
-
+          profile:'',
         },
         loading: true,
       };
@@ -64,6 +64,7 @@ export default {
             Authorization : `Token ${localStorage.getItem('token')}`
         }
       }).then(response => {
+        console.log(response.data);
         this.user = response.data;
       })
       .catch(err=>{
@@ -78,6 +79,10 @@ export default {
           console.error('Error updating profile:', error);
         }
       },
+
+      getAbsouluteURL(url){
+        return "http://localhost:8000" + url
+      }
     },
 };
   </script>

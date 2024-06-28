@@ -30,7 +30,7 @@ class ProductSerializer(serializers.ModelSerializer):
     count_in_cart=serializers.SerializerMethodField()
     class Meta:
         model=Product
-        fields=('id','name','sugar','coffee','flour','vertical','price','in_cart','count_in_cart')
+        fields=('id','name','sugar','coffee','flour','vertical','price','in_cart','count_in_cart','image')
     
     def create(self,validated_data):
         product=Product(
@@ -89,7 +89,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields=('id','first_name','last_name','email','phonenumber','username','is_admin')
+        fields=('id','first_name','last_name','email','phonenumber','username','is_admin','profile')
 
 
 class StorageSerializer(serializers.ModelSerializer):

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderCmp :username="username" />
+    <HeaderCmp/>
     <Slider />
     <Popular />
   </div>
@@ -24,7 +24,6 @@ export default {
     HeaderCmp
   },
   mounted() {
-    this.username = JSON.parse(JSON.parse(localStorage.getItem('info')).config.data).username;
   }
 }
 </script>

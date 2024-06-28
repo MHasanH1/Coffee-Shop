@@ -6,6 +6,7 @@ from django.db.models import Sum
 class User(AbstractUser):
     phonenumber=models.CharField(max_length=11)
     is_admin=models.BooleanField(default=False)
+    profile=models.ImageField(upload_to='profiles/',default='default/user.jpg')
 
 
 class Order(models.Model):
@@ -30,6 +31,7 @@ class Product(models.Model):
     flour=models.PositiveIntegerField()
     vertical=models.CharField(max_length=100,choices=Vertical.choices,blank=False,null=False)
     price=models.PositiveIntegerField()
+    image=models.ImageField(upload_to='products/',default='default/product.png')
 
 class OrderProduct(models.Model):
     product=models.ForeignKey(Product,on_delete=models.CASCADE,related_name="order_products")

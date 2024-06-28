@@ -127,6 +127,7 @@ export default {
           vertical : '',
           in_cart : false,
           count_in_cart : 0,
+          image :'',
         }
       ],
       alertWarning: 'alert-warning',
@@ -164,10 +165,10 @@ export default {
         cart.in_cart=true;
         cart.count_in_cart++;
         this.addStatus = "add successfully";
-        this.$refs.alertS.style.opacity = 1;
-        setTimeout(() => {
-          this.$refs.alertS.style.opacity = 0;
-        }, 2500);
+        // this.$refs.alertS.style.opacity = 1;
+        // setTimeout(() => {
+        //   this.$refs.alertS.style.opacity = 0;
+        // }, 2500);
       })
       .catch(err => {
         console.log(err.response);
@@ -178,10 +179,10 @@ export default {
         if (err.response.status===302) {
           this.addStatus = "already exists in cart";
         }
-        this.$refs.alertW.style.opacity = 1;
-        setTimeout(() => {
-          this.$refs.alertW.style.opacity = 0;
-        }, 2500);
+        // this.$refs.alertW.style.opacity = 1;
+        // setTimeout(() => {
+        //   this.$refs.alertW.style.opacity = 0;
+        // }, 2500);
       })
     },
     getPopulars() {

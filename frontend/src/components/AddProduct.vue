@@ -13,7 +13,7 @@
         <div class="user-box">
           <select v-model="vertical" style="width: 100%; border: none; background-color: #f1f1f1; border-radius: 5px; padding: 10px">
             <option value="hot drink">Warm Drink</option>
-            <option value="dold drink">Cold Drink</option>
+            <option value="cold drink">Cold Drink</option>
             <option value="cake">Cake</option>
           </select>
         </div>

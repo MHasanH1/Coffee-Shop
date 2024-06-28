@@ -8,7 +8,7 @@
       </div>
       <div v-else>
         <form action="" @submit="submitForm()">
-        <div v-if="cart.products.length>=1" class="list-group">
+        <div v-if="cart && cart.products.length>=1" class="list-group">
           <div v-for="item in cart.products" :key="item.id" class="list-group-item d-flex justify-content-between align-items-center">
             <div>
               <h5 class="mb-1">{{ item.name }}</h5>

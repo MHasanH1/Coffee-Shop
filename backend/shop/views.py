@@ -36,6 +36,7 @@ class LoginView(APIView):
         return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class ShowProductsByVerticals(APIView):
+    permission_classes=[permissions.IsAuthenticated]
     def post(self,request:Request):
         i=request.data.get('ver')
         products=Product.objects.filter(vertical=i)
