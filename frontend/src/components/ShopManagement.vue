@@ -15,14 +15,13 @@
     </div>
     <div class="d-flex gap-2">
       <div class="w-25 bg-info p-2">
-
         <button @click="this.$router.push('/stackManagement')" class="fw-bold d-block my-1 btn btn-outline-dark border-0">Stack Management</button>
         <button @click="this.$router.push('/addProduct')" class="fw-bold d-block btn btn-outline-dark border-0">Add Product</button>
-
       </div>
       <div class="chart-container w-75">
-        <h1 class="text-center">{{!selectedOption ? 'Coffee' : selectedOption}}</h1>
+        <h1 class="text-center">{{selectedOption}}</h1>
         <Bar
+            v-if="loaded"
             id="my-chart-id"
             :options="chartOptions"
             :data="chartData"
@@ -32,16 +31,6 @@
               <input type="radio" :value="product.name" v-model="selectedOption" @click="select(product)"/>
               <label for="huey">{{ product.name }}</label>
             </div>
-
-            <!-- <div class="d-flex align-items-center gap-1">
-              <input type="radio" value="Cake" v-model="selectedOption" />
-              <label for="dewey">Cake</label>
-            </div>
-
-            <div class="d-flex align-items-center gap-1">
-              <input type="radio" value="Milk" v-model="selectedOption" />
-              <label for="louie">Milk</label>
-            </div> -->
           </fieldset>
       </div>
     </div>
@@ -60,50 +49,88 @@ export default {
   components: { Bar },
   data() {
     return {
+      loaded: false,
+      // chartData: null,
       chartData: {
-        labels: ['mmd'],
-        datasets: [ { data: [1] } ]
+        labels: [],
+        datasets: [ { data: [0] } ]
       },
       chartOptions: {
         responsive: true
       },
       selectedOption: null,
-      products:[
+      products: [
         {
           id : 0,
           name : '',
-          history:{
+          history: {
             month : '',
             count : 0,
           }
-
         }
       ],
     }
   },
-  methods:{
-    getData(){
+  methods: {
+    getData(pro) {
       axios.get('http://localhost:8000/api/chart/')
-      .then(res=>{
-        console.log(res.data);
-        this.products=res.data;
+      .then(res => {
+        // console.log(res.data)
+        // this.chartData.labels = res.data[0].history.month;
+        // this.chartData.datasets.data = res.data[0].history.count;
+        for (const product of res.data) {
+          if (this.selectedOption === null) {
+            this.chartData = {
+              labels: [''],
+              datasets: [ { data: [0] } ]
+            }
+            break
+          }
+          else if (product.name === pro) {
+            let dict = {
+              labels: [],
+              datasets: [{data: []}],
+            };
+            for (const productElement of product.history) {
+              dict.labels = [productElement.month];
+              dict.datasets[0].data = [productElement.count]
+            }
+            this.chartData = dict;
+            break
+          }
+
+        }
+        this.products = res.data;
+        this.loaded = true
       })
-      .catch(err=>{
+      .catch(err => {
         console.log(err);
+        this.chartData = {
+          labels: [''],
+          datasets: [ { data: [0] } ]
+        }
       })
     },
-    select(product){
-      console.log(product);
-      this.chartData.labels = product.history.map(item => item.month);
+    select(product) {
+      // console.log(product)
+      this.selectedOption = product.name;
+      this.getData(product.name)
+      // console.log(product, "fdnsklfhdshfjdkshfkjdsfkjds");
+      // this.chartData.labels = product.history.map(item => item.month);
       // this.chartData.labels=array;
       // this.chartData.datasets[0].data = product.history.map(item => item.count);
-      console.log(this.chartData.labels);
+      // console.log(this.chartData.labels, "fdnsklfhdshfjdkshfkjdsfkjds");
       // console.log(this.chartData.datasets[0].data);
     }
   },
-  mounted(){
-    this.getData();
-    console.log(this.chartData.labels);
+  async mounted() {
+    this.loaded = false
+    await this.getData();
+
+    if (this.selectedOption === null) {
+      this.chartData = {};
+    }
+    // console.log(this.chartData.labels);
     // console.log(this.chartData.datasets[0].data);
   }
 }
