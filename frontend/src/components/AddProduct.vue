@@ -3,18 +3,18 @@
     <div class="d-flex justify-content-center align-items-center my-5">
       <img src="../assets/img/addProduct.png" style="width: 30%"/>
 
-      <form class="form-signin mx-auto" style="width: 40%">
+      <form class="form-signin mx-auto" style="width: 40%" @submit="submit">
         <div class="user-box">
-          <input type="text" autocomplete required />
+          <input type="text" autocomplete required v-model="name"/>
           <label>Product Name</label>
         </div>
 
         <label for="vertical">Choose Vertical:</label>
         <div class="user-box">
-          <select style="width: 100%; border: none; background-color: #f1f1f1; border-radius: 5px; padding: 10px">
-            <option value="Warm Drink">Warm Drink</option>
-            <option value="Cold Drink">Cold Drink</option>
-            <option value="Cakes">Cakes</option>
+          <select v-model="vertical" style="width: 100%; border: none; background-color: #f1f1f1; border-radius: 5px; padding: 10px">
+            <option value="hot drink">Warm Drink</option>
+            <option value="dold drink">Cold Drink</option>
+            <option value="cake">Cake</option>
           </select>
         </div>
 
@@ -63,6 +63,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -71,6 +73,34 @@ export default {
       flourAmount: 0,
       chocolateAmount: 0,
       price: null,
+      name : "",
+      vertical : '',
+    }
+  },
+  methods:{
+    submit(){
+      console.log(this.vertical);
+      let body={
+        sugar : this.sugarAmount,
+        name : this.name,
+        coffee : this.coffeeAmount,
+        flour : this.flourAmount,
+        chocolate : this.chocolateAmount,
+        price : this.price,
+        vertical : this.vertical
+      }
+      axios.post('http://localhost:8000/api/addproduct/',body,{
+        headers : {
+          Authorization : `Token ${localStorage.getItem('token')}`
+        }
+      })
+      .then(res=>{
+          console.log(res);
+          alert('created!')
+        })
+        .catch(err=>{
+          console.log(err);
+        })
     }
   }
 }
