@@ -13,8 +13,8 @@
         <tbody>
           <tr v-for="cart in carts" :key="cart.id">
             <td>{{ cart.id }}</td>
-            <td>{{ cart.date }}</td>
-            <td>{{ cart.total }}</td>
+            <td>{{ cart.datetime }}</td>
+            <td>{{ cart.order.purchase_amount }}</td>
             <td>
               <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#itemsModal" @click="selectCart(cart)">View Items</button>
             </td>
@@ -47,12 +47,34 @@
   </template>
   
   <script>
+import axios from 'axios';
+
   export default {
     data() {
       return {
         carts: [
-          { id: 1, date: '2023-06-25', total: '$100', items: [{ id: 1, name: 'Item A', quantity: 2 }, { id: 2, name: 'Item B', quantity: 1 }] },
-          { id: 2, date: '2023-06-26', total: '$150', items: [{ id: 3, name: 'Item C', quantity: 3 }, { id: 4, name: 'Item D', quantity: 2 }] }
+          {
+            id: 0,
+            datetime : null,
+            order : {
+              id : 0,
+              purchase_amount : 0,
+              products:[
+              {
+                id : 0,
+                coffee : 0,
+                flour : 0,
+                sugar : 0,
+                price : 0,
+                vertical : '',
+                name : ''
+              },
+            ],
+            type : false,
+            },
+
+
+          }
         ],
         selectedCartItems: []
       };
@@ -60,7 +82,26 @@
     methods: {
       selectCart(cart) {
         this.selectedCartItems = cart.items;
+      },
+      getCarts(){
+        axios.get('http://localhost:8000/api/history/',{
+          headers:{
+            Authorization :`Token ${localStorage.getItem('token')}`
+          }
+        })
+        .then(res=>{
+          console.log(res.data);
+          this.carts=res.data;
+        })
+        .catch(err=>{
+          console.log(err);
+        }
+        
+        )
       }
+    },
+    created(){
+      this.getCarts();
     }
   };
   </script>

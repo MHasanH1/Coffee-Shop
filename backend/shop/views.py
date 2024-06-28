@@ -6,10 +6,11 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
 from rest_framework import generics, permissions
 from rest_framework import status
-from .serializers import UserCreationSerializer,ProductSerializer,OrderProductSerializer,OrderSerializer,UserSerializer
+from .serializers import UserCreationSerializer,ProductSerializer,OrderProductSerializer,OrderSerializer,UserSerializer,StorageSerializer,UserOrderSerializer
 from .models import Vertical,Product,UserOrder,Order,OrderProduct,User,Storage
 from rest_framework.decorators import api_view,permission_classes
 from django.db.models import Count
+from datetime import datetime
 
 
 class RegisterView(APIView):
@@ -50,6 +51,9 @@ class ProductView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+        
+
+    
     
 
 class AddToCartView(APIView):
@@ -65,7 +69,7 @@ class AddToCartView(APIView):
         print(product_id)
         product=Product.objects.get(id=product_id)
 
-        order_product,created=OrderProduct.objects.get_or_create(order=order,product=product)
+        order_product=OrderProduct.objects.create(order=order,product=product)
         checked=order_product.check_product()
         if checked[0]:
 
@@ -80,11 +84,12 @@ class AddToCartView(APIView):
             sugar_storage.save()
             coffee_storage.save()
             flour_storage.save()
+            print(f"sugar {sugar_storage.amount}")
             serialized=OrderProductSerializer(order_product,context={"request":request})
             return Response(serialized.data,status=status.HTTP_201_CREATED)
         else:
-            if created:
-                order_product.delete()
+
+            order_product.delete()
             return Response(data={"message":f"not enough storage for {checked[1]}"},status=status.HTTP_406_NOT_ACCEPTABLE)
             
         #     return Response(serialized.data,status=status.HTTP_201_CREATED)
@@ -101,6 +106,8 @@ class CartView(APIView):
     def get(self,request:Request):
         user_order=UserOrder.objects.filter(user=request.user,is_active=True).last()
         # products=Product.objects.filter(order_products__order=user_order.order)
+        if user_order is None:
+            return Response(data=None,status=status.HTTP_200_OK)
         print(user_order.order)
         serialized = OrderSerializer(user_order.order,many=False,context={"request":request}).data
 
@@ -110,8 +117,9 @@ class CartView(APIView):
 class OrderView(APIView):
     permission_classes=[permissions.IsAuthenticated]
     def get(self,request:Request):
-        orders=Order.objects.filter(user_orders__user=request.user)
-        serialized=OrderSerializer(orders,many=True,context={"request":request})
+        orders=UserOrder.objects.filter(user=request.user,is_active=False)
+        serialized=UserOrderSerializer(orders,many=True,context={"request":request})
+        
         return Response(data=serialized.data,status=status.HTTP_200_OK)
 
         
@@ -159,15 +167,47 @@ class RemoveFromCart(APIView):
         coffee_storage=Storage.objects.get(name="coffee")
         flour_storage=Storage.objects.get(name="flour")
         if order_product:
-            sugar_storage.amount-= order_product.product.sugar
-            coffee_storage.amount-= order_product.product.coffee
-            flour_storage.amount-= order_product.product.flour
+            sugar_storage.amount+= order_product.product.sugar
+            coffee_storage.amount+= order_product.product.coffee
+            flour_storage.amount+= order_product.product.flour
             sugar_storage.save()
             coffee_storage.save()
             flour_storage.save()
             order_product.delete()
+            print(f"sugar {sugar_storage.amount}")
             return Response({"message":"deleted"},status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
+    
+
+class SupplyView(APIView):
+    def post(self,request:Request):
+        try:
+            storage=Storage.objects.get(name=request.data.get('name'))
+            storage.amount=request.data.get('amount')
+
+            storage.save()
+            serializer=StorageSerializer(storage,many=False)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def get(self,requst:Request):
+        storage=Storage.objects.all()
+        serializer=StorageSerializer(storage,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    
+
+
+class ConfirmCartView(APIView):
+    def get(self,request:Request):
+        user_order=UserOrder.objects.filter(user=request.user,is_active=True).last()
+        user_order.is_active=False
+        user_order.datetime=datetime.now()
+        user_order.save()
+        serializer= UserOrderSerializer(user_order,context={"request":request})
+        return Response(serializer.data,status.HTTP_200_OK)
     
 
 

@@ -55,6 +55,7 @@ class UserOrder(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="user_orders")
     order=models.ForeignKey(Order,on_delete=models.CASCADE,related_name="user_orders")
     is_active=models.BooleanField(default=True)
+    datetime=models.DateTimeField(blank=True,null=True)
 
 
 class Supply(models.TextChoices):
@@ -65,6 +66,6 @@ class Supply(models.TextChoices):
 
 class Storage(models.Model):
     name=models.CharField(max_length=100,choices=Supply.choices)
-    amount=models.IntegerField()
+    amount=models.PositiveIntegerField(default=0)
 
     

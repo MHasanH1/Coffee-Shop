@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Product,OrderProduct,UserOrder,Order
+from .models import User,Product,OrderProduct,UserOrder,Order,Storage
 
 class UserCreationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -51,8 +51,11 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_count_in_cart(self,obj:Product):
         user=self.context['request'].user
         cart=UserOrder.objects.filter(user=user,is_active=True).last()
-        order_products=OrderProduct.objects.filter(order=cart.order,product=obj)
-        return order_products.count()
+        if cart!=None:
+            order_products=OrderProduct.objects.filter(order=cart.order,product=obj) 
+            return order_products.count()
+        else:
+            return 0
 
         
     
@@ -84,3 +87,17 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields=('id','first_name','last_name','email','phonenumber','username','is_admin')
+
+
+class StorageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =Storage
+        fields = ('name','amount')
+
+
+class UserOrderSerializer(serializers.ModelSerializer):
+    user=UserSerializer()
+    order=OrderSerializer()
+    class Meta:
+        model = UserOrder
+        fields= ('id','user','order','is_active','datetime')

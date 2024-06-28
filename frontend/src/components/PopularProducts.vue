@@ -71,12 +71,12 @@
                   <button type="button" class="btn btn-sm btn-outline-warning" v-if="isAdmin">Edit</button>
 <!--                  <button type="button" class="btn btn-sm btn-outline-success" @click="addToCart(card.id)">{{addBtnText}}</button>-->
                   <button type="button" class="btn btn-sm btn-outline-success" v-if="!card.in_cart" @click="addToCart(card)">add to cart</button>
-                  <button type="button" class="btn btn-sm btn-outline-danger" v-else @click="removeFromCart(card)">remove from the cart</button>
+                  <!-- <button type="button" class="btn btn-sm btn-outline-danger" v-if="!card.in_cart" @click="removeFromCart(card)">remove from the cart</button> -->
                 </div>
-                <div class="d-flex align-items-center gap-2">
-                  <button class="button text-danger fw-bold" @click="count >= 1 ? count-- : count = 0">-</button>
-                  <p class="m-0">{{count}}</p>
-                  <button class="button text-success fw-bold" @click="count++">+</button>
+                <div class="d-flex align-items-center gap-2" v-if="card.in_cart">
+                  <button class="button text-danger fw-bold" @click="removeFromCart(card)">-</button>
+                  <p class="m-0">{{card?.count_in_cart}}</p>
+                  <button class="button text-success fw-bold" @click="addToCart(card)">+</button>
                 </div>
 <!--                <small class="text-body-secondary">9 mins</small>-->
               </div>
@@ -120,6 +120,7 @@ export default {
           flour: 0 ,
           vertical : '',
           in_cart : false,
+          count_in_cart : 0,
         }
       ],
       alertWarning: 'alert-warning',
@@ -154,7 +155,8 @@ export default {
       .then(res => {
         // console.log("in then");
         console.log(res);
-        cart.in_cart=true; 
+        cart.in_cart=true;
+        cart.count_in_cart++; 
         this.addStatus = "add successfully";
         this.$refs.alertS.style.opacity = 1;
         setTimeout(() => {
@@ -200,7 +202,9 @@ export default {
       })
       .then(res=>{
         console.log(res.data);
-        cart.in_cart=false;
+        if (cart.count_in_cart==1)
+          cart.in_cart=false;
+        cart.count_in_cart--;
         // this.cards=res.data;
       })
       .catch(err=>{
