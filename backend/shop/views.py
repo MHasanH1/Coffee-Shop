@@ -6,7 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
 from rest_framework import generics, permissions
 from rest_framework import status
-from .serializers import UserCreationSerializer,ProductSerializer,OrderProductSerializer,OrderSerializer,UserSerializer,StorageSerializer,UserOrderSerializer
+from .serializers import UserCreationSerializer,ProductSerializer,OrderProductSerializer,OrderSerializer,UserSerializer,StorageSerializer,UserOrderSerializer,CustomProductSerializer
 from .models import Vertical,Product,UserOrder,Order,OrderProduct,User,Storage
 from rest_framework.decorators import api_view,permission_classes
 from django.db.models import Count
@@ -208,6 +208,15 @@ class ConfirmCartView(APIView):
         user_order.save()
         serializer= UserOrderSerializer(user_order,context={"request":request})
         return Response(serializer.data,status.HTTP_200_OK)
+    
+
+
+class ChartView(APIView):
+    def get(self,request:Request):
+        products=Product.objects.all()
+        serializer=CustomProductSerializer(products,many=True)
+        return Response(serializer.data,status.HTTP_200_OK)
+
     
 
 
