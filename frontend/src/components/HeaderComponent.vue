@@ -133,7 +133,7 @@
 <!--            </div>-->
 
             <div class="d-flex align-items-center gap-3">
-              <h4 class="m-0">Hello {{username}}!</h4>
+              <h4 v-if="isAuthenticated" class="m-0">Hello {{username}}!</h4>
               <button v-if="!isAuthenticated" @click="this.$router.push('/login')" type="button" class="btn btn-outline-light me-2">Login</button>
               <button v-if="!isAuthenticated" @click="this.$router.push('/signup')" type="button" class="btn btn-warning">Sign-up</button>
               <button v-else @click="this.$router.push('/login')" type="button" class="btn btn-outline-danger me-2 d-flex">Logout</button>

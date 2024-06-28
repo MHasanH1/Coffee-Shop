@@ -34,7 +34,8 @@ router.beforeEach((to, from, next) => {
     // console.log(to);
     // console.log(from);
     // console.log(next);
-    if (to.path === '/' && from.path !== '/') {
+    // && from.path !== '/'
+    if (to.path === '/') {
         if (!localStorage.getItem('reload')) {
             localStorage['reload'] = true;
             window.location.reload();

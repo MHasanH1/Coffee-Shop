@@ -69,7 +69,7 @@ export default {
       axios.post(`http://localhost:8000/api/login/`,this.body)
       .then(res=>{
         localStorage.setItem('token',res.data.token);
-        localStorage.setItem('sharedData', JSON.stringify(res));
+        localStorage.setItem('info', JSON.stringify(res));
         this.loginErr = "You logged in successful";
         this.$refs.alertS.style.opacity = 1;
         setTimeout(() => {

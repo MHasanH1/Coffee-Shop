@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderCmp />
+    <HeaderCmp :username="username" />
     <Slider />
     <Popular />
   </div>
@@ -13,11 +13,19 @@ import Popular from "./PopularProducts.vue";
 import HeaderCmp from "@/components/HeaderComponent.vue";
 
 export default {
+  data() {
+    return {
+      username: "",
+    }
+  },
   components: {
     Slider,
     Popular,
     HeaderCmp
   },
+  mounted() {
+    this.username = JSON.parse(JSON.parse(localStorage.getItem('info')).config.data).username;
+  }
 }
 </script>
 

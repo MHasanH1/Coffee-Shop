@@ -103,6 +103,12 @@
       </div>
     </transition>
 
+<!--    <transition name="fade">-->
+<!--      <div v-show="addStatus === ''" ref="alertS" class="alert alert-success alert-dismissible fade show" role="alert">-->
+<!--        <strong>Success!</strong> {{ addStatus }}-->
+<!--        <button type="button" class="btn-close" @click="this.$refs.alertS.style.opacity = 0" aria-label="Close"></button>-->
+<!--      </div>-->
+<!--    </transition>-->
   </div>
 </template>
 
@@ -156,7 +162,7 @@ export default {
         // console.log("in then");
         console.log(res);
         cart.in_cart=true;
-        cart.count_in_cart++; 
+        cart.count_in_cart++;
         this.addStatus = "add successfully";
         this.$refs.alertS.style.opacity = 1;
         setTimeout(() => {
@@ -167,7 +173,7 @@ export default {
         console.log(err.response);
         if (err.response.status===406){
           this.addStatus=err.response.data["message"];
-
+          alert(this.addStatus)
         }
         if (err.response.status===302) {
           this.addStatus = "already exists in cart";
